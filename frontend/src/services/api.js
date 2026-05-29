@@ -20,7 +20,8 @@ api.interceptors.response.use(
       original._retry = true
       try {
         const refreshToken = useAuthStore.getState().refreshToken
-        const res = await axios.post('/api/auth/token/refresh/', { refresh: refreshToken })
+        const base = import.meta.env.VITE_API_BASE_URL || '/api'
+        const res = await axios.post(`${base}/auth/token/refresh/`, { refresh: refreshToken })
         useAuthStore.getState().setTokens(res.data.access, refreshToken)
         original.headers.Authorization = `Bearer ${res.data.access}`
         return api(original)
